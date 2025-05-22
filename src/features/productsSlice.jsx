@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 const initialState={ //is this structure is perfect creating seperae state for each fetch related task as it won't mixup with other
-    productList:{ 
+    ProductList:{ 
         products:null,
         loading:false,
         error:null
@@ -14,8 +14,8 @@ const productFetch=createAsyncThunk("product/productFetch",async (_,thunkAPI)=>{
 
         const result=await fetch('https://fakestoreapi.in/api/products');
 
-            const data=JSON.parse(result);
-                return data;
+            const data=await result.json(); // in genrall i see we mostly parse data that come from json ,is this parsing happen if yes then then what about Json.parse(result);
+                return data.products;
     }
                 catch(error){
 
@@ -31,16 +31,16 @@ const product=createSlice({
     initialState,
     reducers:{},
     extraReducers:(builder)=>{
-        builder //did i gracfully handle each state 
+        builder //did i gracefully handle each state 
         .addCase(productFetch.pending,(state)=>{
-            state.productList.loading=true;
+            state.ProductList.loading=true;
         })
-        .addCase(productFetch.fulfilled,(state)=>{
-            state.productList.products=action.payload;
-            state.productList.loading=false;
+        .addCase(productFetch.fulfilled,(state,action)=>{
+            state.ProductList.products=action.payload;
+            state.ProductList.loading=false;
         })
-        .addCase(productFetch.rejected,(state)=>{
-            state.productList.error=action.payload||'something went wrong'
+        .addCase(productFetch.rejected,(state,action)=>{
+            state.ProductList.error=action.payload||'something went wrong'
         })
     }
 })

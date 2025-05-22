@@ -14,19 +14,32 @@ function ProductList() {
           dispatcher(productFetch());
     },[]);
   console.log(products,loading,error)
-  
+//   if (loading) return ;
+// if (error) return <p>{error}</p>;
   
   return (
-    
-
-
-
-
     <div>
+      {
+        loading && <p>Loading...</p>
+      }
 
-        <h1> Product List </h1>
-    </div>
-  )
+      {
+        error && <p>{error}</p>
+      }
+      
+  <div className="grid grid-cols-3 gap-4">
+    {products?.map(product => (
+      <div key={product.id} className="border p-4">
+        <img src={product.image} className="h-32 mx-auto" />
+        <h2 className="text-lg">{product.title}</h2>
+        <p>₹ {product.price}</p>
+        <p>⭐ {product.rating?.rate}</p>
+      </div>
+    ))}
+  </div>
+  </div>
+);
+
 }
 
 export default ProductList;

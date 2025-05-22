@@ -12,14 +12,14 @@ const productFetch=createAsyncThunk("product/productFetch",async (_,thunkAPI)=>{
 
     try{
 
-        const result=await fetch('https://fakestoreapi.in/api/products');
+        const result=await fetch('https://fakestoreapi.com/products');
 
             const data=await result.json(); // in genrall i see we mostly parse data that come from json ,is this parsing happen if yes then then what about Json.parse(result);
-                return data.products;
+                return data;
     }
                 catch(error){
 
-                    return thunkAPI.rejectWithValue(error);
+                    return thunkAPI.rejectWithValue(error.message || "Something went wrong");
 
         }
     
@@ -34,6 +34,8 @@ const product=createSlice({
         builder //did i gracefully handle each state 
         .addCase(productFetch.pending,(state)=>{
             state.ProductList.loading=true;
+            state.ProductList.error = null;
+            state.ProductList.products = [];
         })
         .addCase(productFetch.fulfilled,(state,action)=>{
             state.ProductList.products=action.payload;

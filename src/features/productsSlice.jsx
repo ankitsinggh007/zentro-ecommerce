@@ -5,6 +5,11 @@ const initialState={ //is this structure is perfect creating seperae state for e
         products:null,
         loading:false,
         error:null
+    },
+    ProductDetails:{
+        product:null,
+        loading:false,
+        error:null
     }
 }
 //currenlty i am using fetch but during enhancement i will replace it with axios as this is presnt in our to do concept from react topic list 
@@ -26,7 +31,26 @@ const productFetch=createAsyncThunk("product/productFetch",async (_,thunkAPI)=>{
 })
 
 
-const product=createSlice({
+const productDetailsFetch=createAsyncThunk('product/productDetailsFetch',async (id,thunkAPI)=>{
+    try{
+
+        const result=await fetch(`https://fakestoreapi.com/products/${id}`);
+
+        const data=await result.json();
+        return data;
+    }
+    catch(error){
+
+        return thunkAPI.rejectWithValue(error.message||"something went wrong")
+
+    }   
+
+});
+
+
+
+
+const productSlice=createSlice({
     name:"product",
     initialState,
     reducers:{},
@@ -44,9 +68,23 @@ const product=createSlice({
         .addCase(productFetch.rejected,(state,action)=>{
             state.ProductList.error=action.payload||'something went wrong'
         })
+        // productDetailsFetch
+         .addCase(productDetailsFetch.pending,(state)=>{
+            state.ProductDetails.loading=true;
+            state.ProductDetails.error = null;
+            state.ProductDetails.product = null;
+
+        })
+        .addCase(productDetailsFetch.fulfilled,(state,action)=>{
+            state.ProductDetails.product=action.payload;
+            state.ProductDetails.loading=false;
+        })
+        .addCase(productDetailsFetch.rejected,(state,action)=>{
+            state.ProductDetails.error=action.payload||'something went wrong'
+        })
     }
 })
 
-export {productFetch};
+export {productFetch,productDetailsFetch};
 
-export default product.reducer;
+export default productSlice.reducer;

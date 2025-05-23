@@ -8,7 +8,6 @@ function App() {
 
   return (
     <Routes>
-
         <Route path='/products' Component={ProductList} />
       <Route path='/product/:id' Component={ProductDetail}/>
     </Routes>
